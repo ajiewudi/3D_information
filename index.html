@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文物数字展厅</title>
+  <style>
+    /* 全局样式 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Noto Serif SC", "SimSun", serif;
+    }
+
+    body {
+      background-color: #f8f5e6;
+      color: #3a2e21;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    /* 左侧文物列表样式 */
+    #left-column {
+      width: 250px;
+      background-color: #e8e0d0;
+      padding: 25px 15px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    .column-title {
+      color: #8b4513;
+      border-bottom: 2px solid #c19a6b;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+
+    /* 文物名字列表样式 */
+    #artifact-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .artifact-item {
+      cursor: pointer;
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      background-color: #f5f0e1;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+      border-left: 4px solid transparent;
+    }
+
+    .artifact-item:hover {
+      background-color: #fff;
+      transform: translateX(5px);
+      border-left-color: #8b4513;
+    }
+
+    .artifact-item.active {
+      background-color: #fff;
+      border-left-color: #8b4513;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 右侧内容展示区域样式 */
+    #right-column {
+      flex-grow: 1;
+      padding: 30px;
+      max-width: calc(100% - 250px);
+    }
+
+    #artifact-name {
+      color: #8b4513;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #d2b48c;
+      font-size: 2rem;
+    }
+
+    /* 模型容器样式 */
+    #model-container {
+      width: 100%;
+      height: 500px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .model-controls {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 10px 15px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .model-controls h4 {
+      margin-bottom: 5px;
+      color: #8b4513;
+      font-size: 1rem;
+    }
+
+    .controls-list {
+      list-style-type: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+    }
+
+    /* 文物信息样式 */
+    .artifact-info {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .info-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .info-item {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px 15px;
+      border-bottom: 1px dashed #e0d8c0;
+    }
+
+    .info-item:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      font-weight: bold;
+      color: #8b4513;
+      margin-right: 8px;
+    }
+
+    #artifact-introduction {
+      padding: 15px;
+      background-color: #f9f6ea;
+      border-radius: 6px;
+      margin-top: 15px;
+      line-height: 1.8;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 900px) {
+      #left-column {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      #right-column {
+        max-width: 100%;
+        width: 100%;
+      }
+
+      #model-container {
+        height: 400px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .info-row {
+        flex-direction: column;
+      }
+
+      .info-item {
+        min-width: 100%;
+      }
+
+      #model-container {
+        height: 300px;
+      }
+
+      #right-column, #left-column {
+        padding: 15px;
+      }
+    }
+  </style>
+  <!-- 引入字体 -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- 引入Three.js库 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- 引入OBJLoader用于加载.obj模型 -->
+  <script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <!-- 左侧文物名字列表 -->
+    <div id="left-column">
+      <h2 class="column-title">文物列表</h2>
+      <ul id="artifact-list">
+        <!-- 文物名字会通过JavaScript动态添加 -->
+      </ul>
+    </div>
+    
+    <!-- 右侧内容展示区域 -->
+    <div id="right-column">
+      <h2 id="artifact-name">请选择一件文物</h2>
+      <div id="model-container">
+        <div class="model-controls">
+          <h4>模型控制</h4>
+          <ul class="controls-list">
+            <li>↑↓←→: 移动</li>
+            <li>滚轮: 缩放</li>
+            <li>鼠标拖动: 旋转</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="artifact-info">
+        <div class="info-row">
+          <div class="info-item">
+            <span class="info-label">质地:</span>
+            <span id="artifact-texture"></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">年代:</span>
+            <span id="artifact-era"></span>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-item">
+            <span class="info-label">尺寸:</span>
+            <span id="artifact-size"></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">数量:</span>
+            <span id="artifact-quantity"></span>
+          </div>
+        </div>
+        <p id="artifact-introduction"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 文物数据（从之前的Excel分析结果获取）
+    const artifacts = [
+      {
+        name: '佛首',
+        texture: '砂岩',
+        era: '北魏',
+        size: '高29.5厘米',
+        quantity: '1',
+        introduction: '砂岩质，高29.5厘米，高肉髻，弯眉，双目微闭，似冥想状。整体造型体现了北魏时期佛像的典型特征，工艺精湛，具有较高的艺术和历史价值。',
+        modelPath: 'models/佛首.obj'  // 修改为实际模型路径
+      },
+      {
+        name: '画像石',
+        texture: '石灰岩',
+        era: '汉代',
+        size: '未记录',
+        quantity: '2',
+        introduction: '在方形青石上绘制汉代人物画像，画像内容丰富，生动再现了汉代社会生活场景。画像石是研究汉代历史、文化、艺术的重要实物资料。',
+        modelPath: 'models/画像石.obj'  // 修改为实际模型路径
+      },
+      {
+        name: '石狮',
+        texture: '石灰岩',
+        era: '唐代',
+        size: '高10厘米',
+        quantity: '1',
+        introduction: '狮子的形象始于汉朝，据传东汉章帝时，西域大月国将狮子作为礼物进贡给中国皇帝。后来随着佛教传入，狮子成为一种赋予神力的灵兽。在佛教场所、陵墓、建筑上都较为常见。这尊石狮张嘴伸舌，昂首挺胸，双眼前视，体壮有力，颇有唐代时期石狮威猛雄壮的风采。',
+        modelPath: 'models/石狮.obj'  // 修改为实际模型路径
+      }
+    ];
+
+    // 获取DOM元素
+    const artifactList = document.getElementById('artifact-list');
+    const artifactName = document.getElementById('artifact-name');
+    const modelContainer = document.getElementById('model-container');
+    const artifactTexture = document.getElementById('artifact-texture');
+    const artifactEra = document.getElementById('artifact-era');
+    const artifactSize = document.getElementById('artifact-size');
+    const artifactQuantity = document.getElementById('artifact-quantity');
+    const artifactIntroduction = document.getElementById('artifact-introduction');
+
+    // Three.js相关变量
+    let scene, camera, renderer, currentModel;
+    let modelRotation = { x: 0, y: 0 };
+    let modelPosition = { x: 0, y: 0 };
+    let modelScale = 1;
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+
+    // 初始化Three.js场景
+    function initThree() {
+      // 创建场景
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xf9f6ea);
+
+      // 创建相机
+      camera = new THREE.PerspectiveCamera(
+        75, 
+        modelContainer.offsetWidth / modelContainer.offsetHeight, 
+        0.1, 
+        1000
+      );
+      camera.position.z = 5;
+
+      // 创建渲染器
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(modelContainer.offsetWidth, modelContainer.offsetHeight);
+      modelContainer.appendChild(renderer.domElement);
+
+      // 添加光源
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+
+      const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight1.position.set(1, 1, 1);
+      scene.add(directionalLight1);
+
+      const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.4);
+      directionalLight2.position.set(-1, -1, 1);
+      scene.add(directionalLight2);
+
+      // 添加坐标轴辅助（调试用）
+      // const axesHelper = new THREE.AxesHelper(5);
+      // scene.add(axesHelper);
+
+      // 监听窗口大小变化
+      window.addEventListener('resize', onWindowResize);
+
+      // 添加鼠标和键盘事件监听
+      addEventListeners();
+
+      // 开始动画循环
+      animate();
+    }
+
+    // 窗口大小变化时调整渲染器和相机
+    function onWindowResize() {
+      camera.aspect = modelContainer.offsetWidth / modelContainer.offsetHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(modelContainer.offsetWidth, modelContainer.offsetHeight);
+    }
+
+    // 添加交互事件监听
+    function addEventListeners() {
+      // 鼠标按下
+      modelContainer.addEventListener('mousedown', (event) => {
+        isDragging = true;
+        previousMousePosition = {
+          x: event.clientX,
+          y: event.clientY
+        };
+      });
+
+      // 鼠标移动
+      window.addEventListener('mousemove', (event) => {
+        if (!isDragging || !currentModel) return;
+        
+        const deltaX = event.clientX - previousMousePosition.x;
+        const deltaY = event.clientY - previousMousePosition.y;
+
+        modelRotation.y += deltaX * 0.01;
+        modelRotation.x += deltaY * 0.01;
+
+        currentModel.rotation.x = modelRotation.x;
+        currentModel.rotation.y = modelRotation.y;
+
+        previousMousePosition = {
+          x: event.clientX,
+          y: event.clientY
+        };
+      });
+
+      // 鼠标释放
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      // 鼠标滚轮（缩放）
+      modelContainer.addEventListener('wheel', (event) => {
+        event.preventDefault();
+        if (!currentModel) return;
+        
+        modelScale += event.deltaY * -0.001;
+        modelScale = Math.min(Math.max(0.1, modelScale), 10); // 限制缩放范围
+        currentModel.scale.set(modelScale, modelScale, modelScale);
+      });
+
+      // 键盘控制（移动）
+      window.addEventListener('keydown', (event) => {
+        if (!currentModel) return;
+        
+        const speed = 0.1;
+        switch (event.key) {
+          case 'ArrowUp':
+            modelPosition.y += speed;
+            break;
+          case 'ArrowDown':
+            modelPosition.y -= speed;
+            break;
+          case 'ArrowLeft':
+            modelPosition.x -= speed;
+            break;
+          case 'ArrowRight':
+            modelPosition.x += speed;
+            break;
+        }
+        currentModel.position.set(modelPosition.x, modelPosition.y, 0);
+      });
+    }
+
+    // 加载3D模型
+    function loadModel(modelPath) {
+      // 移除当前模型
+      if (currentModel) {
+        scene.remove(currentModel);
+      }
+
+      // 重置模型状态
+      modelRotation = { x: 0, y: 0 };
+      modelPosition = { x: 0, y: 0 };
+      modelScale = 1;
+
+      const loader = new THREE.OBJLoader();
+      loader.load(
+        modelPath,
+        function (object) {
+          currentModel = object;
+          
+          // 居中模型
+          centerModel(currentModel);
+          
+          // 添加到场景
+          scene.add(currentModel);
+        },
+        function (xhr) {
+          // 加载进度
+          console.log((xhr.loaded / xhr.total * 100) + '% 已加载');
+        },
+        function (error) {
+          console.error('模型加载错误:', error);
+          alert('模型加载失败，请检查文件路径是否正确');
+        }
+      );
+    }
+
+    // 居中模型
+    function centerModel(model) {
+      // 计算模型边界盒
+      const box = new THREE.Box3().setFromObject(model);
+      const center = box.getCenter(new THREE.Vector3());
+      
+      // 移动模型使其中心位于原点
+      model.position.sub(center);
+    }
+
+    // 动画循环
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+
+    // 初始化Three.js
+    initThree();
+
+    // 填充文物列表
+    artifacts.forEach(artifact => {
+      const listItem = document.createElement('li');
+      listItem.className = 'artifact-item';
+      listItem.textContent = artifact.name;
+      
+      listItem.addEventListener('click', function () {
+        // 更新选中状态
+        document.querySelectorAll('.artifact-item').forEach(item => {
+          item.classList.remove('active');
+        });
+        this.classList.add('active');
+
+        // 显示文物信息
+        artifactName.textContent = artifact.name;
+        artifactTexture.textContent = artifact.texture;
+        artifactEra.textContent = artifact.era;
+        artifactSize.textContent = artifact.size || '未记录';
+        artifactQuantity.textContent = artifact.quantity;
+        artifactIntroduction.textContent = artifact.introduction;
+
+        // 加载新的3D模型
+        loadModel(artifact.modelPath);
+      });
+      
+      artifactList.appendChild(listItem);
+    });
+  </script>
+</body>
+
+</html>
