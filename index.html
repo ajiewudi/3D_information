@@ -1,519 +1,784 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>文物数字展厅</title>
-  <style>
-    /* 全局样式 */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Noto Serif SC", "SimSun", serif;
-    }
-
-    body {
-      background-color: #f8f5e6;
-      color: #3a2e21;
-      min-height: 100vh;
-      line-height: 1.6;
-    }
-
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      width: 100%;
-      min-height: 100vh;
-    }
-
-    /* 左侧文物列表样式 */
-    #left-column {
-      width: 250px;
-      background-color: #e8e0d0;
-      padding: 25px 15px;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-      z-index: 10;
-      flex-shrink: 0;
-    }
-
-    .column-title {
-      color: #8b4513;
-      border-bottom: 2px solid #c19a6b;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-      text-align: center;
-      font-size: 1.5rem;
-    }
-
-    /* 文物名字列表样式 */
-    #artifact-list {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    .artifact-item {
-      cursor: pointer;
-      padding: 12px 15px;
-      margin-bottom: 8px;
-      background-color: #f5f0e1;
-      border-radius: 6px;
-      transition: all 0.3s ease;
-      font-size: 1.1rem;
-      border-left: 4px solid transparent;
-    }
-
-    .artifact-item:hover {
-      background-color: #fff;
-      transform: translateX(5px);
-      border-left-color: #8b4513;
-    }
-
-    .artifact-item.active {
-      background-color: #fff;
-      border-left-color: #8b4513;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    /* 右侧内容展示区域样式 */
-    #right-column {
-      flex-grow: 1;
-      padding: 30px;
-      max-width: calc(100% - 250px);
-    }
-
-    #artifact-name {
-      color: #8b4513;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #d2b48c;
-      font-size: 2rem;
-    }
-
-    /* 模型容器样式 */
-    #model-container {
-      width: 100%;
-      height: 500px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .model-controls {
-      position: absolute;
-      bottom: 15px;
-      right: 15px;
-      background-color: rgba(255, 255, 255, 0.8);
-      padding: 10px 15px;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
-
-    .model-controls h4 {
-      margin-bottom: 5px;
-      color: #8b4513;
-      font-size: 1rem;
-    }
-
-    .controls-list {
-      list-style-type: none;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5px;
-    }
-
-    /* 文物信息样式 */
-    .artifact-info {
-      background-color: #fff;
-      border-radius: 8px;
-      padding: 25px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .info-row {
-      display: flex;
-      flex-wrap: wrap;
-      margin-bottom: 15px;
-    }
-
-    .info-item {
-      flex: 1;
-      min-width: 200px;
-      padding: 10px 15px;
-      border-bottom: 1px dashed #e0d8c0;
-    }
-
-    .info-item:last-child {
-      border-bottom: none;
-    }
-
-    .info-label {
-      font-weight: bold;
-      color: #8b4513;
-      margin-right: 8px;
-    }
-
-    #artifact-introduction {
-      padding: 15px;
-      background-color: #f9f6ea;
-      border-radius: 6px;
-      margin-top: 15px;
-      line-height: 1.8;
-    }
-
-    /* 响应式设计 */
-    @media (max-width: 900px) {
-      #left-column {
-        width: 100%;
-        max-width: 100%;
-      }
-
-      #right-column {
-        max-width: 100%;
-        width: 100%;
-      }
-
-      #model-container {
-        height: 400px;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .info-row {
-        flex-direction: column;
-      }
-
-      .info-item {
-        min-width: 100%;
-      }
-
-      #model-container {
-        height: 300px;
-      }
-
-      #right-column, #left-column {
-        padding: 15px;
-      }
-    }
-  </style>
-  <!-- 引入字体 -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- 先引入 Three.js 核心库 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <!-- 再引入本地的 OBJLoader.js -->
-  <script src="js/OBJLoader.js"></script>
-
-  
+    <meta charset="UTF-8">
+    <title>文物数字展厅</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Noto Serif SC", serif; }
+        body { background-color: #f8f5e6; color: #3a2e21; overflow-x: hidden; }
+        .container { display: flex; min-height: 100vh; }
+        #left-column { width: 250px; background-color: #e8e0d0; padding: 25px 15px; flex-shrink: 0; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 10; }
+        .column-title { color: #8b4513; border-bottom: 2px solid #c19a6b; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }
+        #artifact-list { list-style: none; }
+        .artifact-item { cursor: pointer; padding: 12px 15px; margin-bottom: 8px; background-color: #f5f0e1; border-radius: 6px; transition: all 0.3s; border-left: 4px solid transparent; }
+        .artifact-item.active { background-color: #fff; border-left-color: #8b4513; transform: translateX(5px); }
+        #right-column { flex-grow: 1; padding: 30px; display: flex; flex-direction: column; }
+        #artifact-name { color: #8b4513; margin-bottom: 20px; border-bottom: 3px solid #d2b48c; font-size: 2rem; }
+        #content-layout { display: flex; flex-direction: column; gap: 20px; flex-grow: 1; height: 500px;} 
+		
+		
+		
+		
+		
+        #content-layout.split-mode { flex-direction: row; height: 500px; }
+		
+        #main-viewer { background-color: #111; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); overflow: hidden; position: relative; flex-grow: 1; min-height: 400px; display: flex; align-items: center; justify-content: center; }
+        
+		#model-container { width: 100%; height: 100%; cursor: grab; }
+        #photo-container { width: 100%; height: 100%; display: none; overflow: hidden; position: relative; background: #fff; cursor: grab; }
+        #main-photo { position: absolute; height: 100%; width: auto; transform-origin: center; transition: transform 0.1s; pointer-events: none; }
+        #info-panel { flex-shrink: 0; background-color: #fff; border-radius: 8px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .split-mode #info-panel { width: 380px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+        .thumb-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; overflow-y: auto; max-height: 400px; padding: 5px; }
+        .thumb-item { width: 100%; aspect-ratio: 9/16; object-fit: cover; cursor: pointer; border: 2px solid transparent; }
+        .thumb-item.active { border-color: #8b4513; }
+        .section-title { font-weight: bold; color: #8b4513; margin-bottom: 8px; display: block; border-left: 4px solid #8b4513; padding-left: 10px; }
+        .hidden { display: none !important; }
+        .model-controls { position: absolute; bottom: 15px; right: 15px; background: rgba(255,255,255,0.8); padding: 8px; border-radius: 4px; font-size: 0.75rem; pointer-events: none; z-index: 5; }
+        #loading-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:10; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
-
 <body>
-  <div class="container">
-    <!-- 左侧文物名字列表 -->
-    <div id="left-column">
-      <h2 class="column-title">文物列表</h2>
-      <ul id="artifact-list">
-        <!-- 文物名字会通过JavaScript动态添加 -->
-      </ul>
+    <div class="container">
+        <div id="left-column">
+            <h2 class="column-title">文物列表</h2>
+            <ul id="artifact-list"></ul>
+        </div>
+        <div id="right-column">
+            <h2 id="artifact-name">请选择文物</h2>
+            <div id="content-layout">
+                <div id="main-viewer">
+                    <div id="loading-overlay">
+                        <p style="color:#8b4513;font-weight:bold;">深度解析高性能三维资产...</p>
+                        <p id="progress">0%</p>
+                    </div>
+                    <div id="model-container"></div>
+                    <div id="photo-container"><img id="main-photo" src=""></div>
+                    <div class="model-controls">3D: 左键旋转 | 右键平移 | 滚轮缩放 —— 图片: 左键拖拽 | 滚轮缩放</div>
+                </div>
+                <div id="info-panel">
+                    <div id="params-box">
+                        <span class="section-title">详细参数</span>
+                        <p>质地：<span id="p-texture"></span> | 年代：<span id="p-era"></span></p>
+                        <p>尺寸：<span id="p-size"></span> | 数量：<span id="p-quantity"></span></p>
+                    </div>
+                    <div id="intro-box" style="margin-top:15px;"><span class="section-title">简介</span><p id="p-intro"></p></div>
+                    <div id="gallery-box" class="hidden"><span class="section-title">图片集</span><div id="thumb-container" class="thumb-grid"></div></div>
+                    <div id="history-box" class="hidden" style="margin-top:15px;"><span class="section-title">文物历史</span><p id="p-history"></p></div>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <!-- 右侧内容展示区域 -->
-    <div id="right-column">
-      <h2 id="artifact-name">请选择一件文物</h2>
-      <div id="model-container">
-        <div class="model-controls">
-          <h4>模型控制</h4>
-          <ul class="controls-list">
-            <li>↑↓←→: 移动</li>
-            <li>滚轮: 缩放</li>
-            <li>鼠标拖动: 旋转</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="artifact-info">
-        <div class="info-row">
-          <div class="info-item">
-            <span class="info-label">质地:</span>
-            <span id="artifact-texture"></span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">年代:</span>
-            <span id="artifact-era"></span>
-          </div>
-        </div>
-        <div class="info-row">
-          <div class="info-item">
-            <span class="info-label">尺寸:</span>
-            <span id="artifact-size"></span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">数量:</span>
-            <span id="artifact-quantity"></span>
-          </div>
-        </div>
-        <p id="artifact-introduction"></p>
-      </div>
-    </div>
-  </div>
 
-  <script>
-    // 文物数据（从之前的Excel分析结果获取）
+<script>
+    // 1. 数据源精准对齐你的最新 .glb 文件名
     const artifacts = [
-      {
-        name: '佛首',
-        texture: '砂岩',
-        era: '北魏',
-        size: '高29.5厘米',
-        quantity: '1',
-        introduction: '砂岩质，高29.5厘米，高肉髻，弯眉，双目微闭，似冥想状。整体造型体现了北魏时期佛像的典型特征，工艺精湛，具有较高的艺术和历史价值。',
-        modelPath: 'models/佛首.obj'  // 修改为实际模型路径
-      },
-      {
-        name: '画像石',
-        texture: '石灰岩',
-        era: '汉代',
-        size: '未记录',
-        quantity: '2',
-        introduction: '在方形青石上绘制汉代人物画像，画像内容丰富，生动再现了汉代社会生活场景。画像石是研究汉代历史、文化、艺术的重要实物资料。',
-        modelPath: 'models/画像石.obj'  // 修改为实际模型路径
-      },
-      {
-        name: '石狮',
-        texture: '石灰岩',
-        era: '唐代',
-        size: '高10厘米',
-        quantity: '1',
-        introduction: '狮子的形象始于汉朝，据传东汉章帝时，西域大月国将狮子作为礼物进贡给中国皇帝。后来随着佛教传入，狮子成为一种赋予神力的灵兽。在佛教场所、陵墓、建筑上都较为常见。这尊石狮张嘴伸舌，昂首挺胸，双眼前视，体壮有力，颇有唐代时期石狮威猛雄壮的风采。',
-        modelPath: 'models/石狮.obj'  // 修改为实际模型路径
-      }
+        { name: '1. 佛首', type: '3d', texture: '砂岩', era: '北魏', size: '高29.5cm', quantity: '1', intro: '砂岩质，高29.5厘米，高肉髻，弯眉，双目微闭，似冥想状。', path: 'models/foshou.glb' },
+        { name: '2. 方块石', type: '3d', texture: '石灰岩', era: '汉代', size: '大型', quantity: '1', intro: '汉代石加工工艺的代表。', path: 'models/fangkuaishi.glb' },
+        { name: '3. 画像石', type: '3d', texture: '石灰岩', era: '汉代', size: ' ', quantity: '2', intro: '在方形青石上绘制汉代人物画像。', path: 'models/huaxiangshi.glb' },
+        { name: '4. 门狮', type: '3d', texture: '石灰岩', era: '东魏', size: '长41.5厘米，宽15厘米，高31厘米', quantity: '1', intro: '这件东魏时期的门墩石狮，即具有实用价值又有其装饰作用。狮子挺胸昂首，巨目大眼，形象非常的威猛。而狮子辟邪护法的寓意得到人们的崇拜。', path: 'models/menshi.glb' },
+        { name: '5. 坐卧石狮', type: '3d', texture: '石灰岩', era: '唐代', size: '高10cm', quantity: '1', intro: '狮子的形象始于汉朝，目传东汉章帝时，西域大月国将狮子作为礼物进贡给中国皇帝。后来随着佛教传入，狮子成为一种赋予神力的灵兽。在佛教场所、陵墓、建筑上都较为常!L。这尊石狮张嘴伸舌，挺昂首，双眼前视，体壮有力颇有唐代时期石狮威猛雄壮的风采。', path: 'models/zuowoshishi.glb' },
+        { name: '6. 长大石刻', type: 'photo', history: '长安大学石刻系列。', 
+            images: [
+                'images/DSC02813.JPG', 'images/DSC02816.JPG', 'images/DSC02819.JPG', 
+                'images/DSC02821.JPG', 'images/DSC02823.JPG', 'images/DSC02825.JPG', 
+                'images/DSC02827.JPG', 'images/DSC02829.JPG', 'images/DSC02836.JPG',
+                'images/DSC02839.JPG', 'images/DSC02841.JPG', 'images/DSC02844.JPG', 
+                'images/DSC02846.JPG', 'images/DSC02848.JPG', 'images/DSC02854.JPG',
+                'images/DSC02858.JPG', 'images/DSC02863.JPG', 'images/DSC02865.JPG'
+            ] 
+        }
     ];
 
-    // 获取DOM元素
-    const artifactList = document.getElementById('artifact-list');
-    const artifactName = document.getElementById('artifact-name');
-    const modelContainer = document.getElementById('model-container');
-    const artifactTexture = document.getElementById('artifact-texture');
-    const artifactEra = document.getElementById('artifact-era');
-    const artifactSize = document.getElementById('artifact-size');
-    const artifactQuantity = document.getElementById('artifact-quantity');
-    const artifactIntroduction = document.getElementById('artifact-introduction');
+    let scene, camera, renderer, controls, currentModel;
+    let imgScale = 1, imgX = 0, imgY = 0, isDrag = false, startX, startY;
 
-    // Three.js相关变量
-    let scene, camera, renderer, currentModel;
-    let modelRotation = { x: 0, y: 0 };
-    let modelPosition = { x: 0, y: 0 };
-    let modelScale = 1;
-    let isDragging = false;
-    let previousMousePosition = { x: 0, y: 0 };
-
-    // 初始化Three.js场景
     function initThree() {
-      // 创建场景
-      scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xf9f6ea);
-
-      // 创建相机
-      camera = new THREE.PerspectiveCamera(
-        75, 
-        modelContainer.offsetWidth / modelContainer.offsetHeight, 
-        0.1, 
-        1000
-      );
-      camera.position.z = 5;
-
-      // 创建渲染器
-      renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(modelContainer.offsetWidth, modelContainer.offsetHeight);
-      modelContainer.appendChild(renderer.domElement);
-
-      // 添加光源
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-      scene.add(ambientLight);
-
-      const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
-      directionalLight1.position.set(1, 1, 1);
-      scene.add(directionalLight1);
-
-      const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.4);
-      directionalLight2.position.set(-1, -1, 1);
-      scene.add(directionalLight2);
-
-      // 添加坐标轴辅助（调试用）
-      // const axesHelper = new THREE.AxesHelper(5);
-      // scene.add(axesHelper);
-
-      // 监听窗口大小变化
-      window.addEventListener('resize', onWindowResize);
-
-      // 添加鼠标和键盘事件监听
-      addEventListeners();
-
-      // 开始动画循环
-      animate();
-    }
-
-    // 窗口大小变化时调整渲染器和相机
-    function onWindowResize() {
-      camera.aspect = modelContainer.offsetWidth / modelContainer.offsetHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(modelContainer.offsetWidth, modelContainer.offsetHeight);
-    }
-
-    // 添加交互事件监听
-    function addEventListeners() {
-      // 鼠标按下
-      modelContainer.addEventListener('mousedown', (event) => {
-        isDragging = true;
-        previousMousePosition = {
-          x: event.clientX,
-          y: event.clientY
-        };
-      });
-
-      // 鼠标移动
-      window.addEventListener('mousemove', (event) => {
-        if (!isDragging || !currentModel) return;
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x111111); // 深色背景更有展厅厚重感
         
-        const deltaX = event.clientX - previousMousePosition.x;
-        const deltaY = event.clientY - previousMousePosition.y;
-
-        modelRotation.y += deltaX * 0.01;
-        modelRotation.x += deltaY * 0.01;
-
-        currentModel.rotation.x = modelRotation.x;
-        currentModel.rotation.y = modelRotation.y;
-
-        previousMousePosition = {
-          x: event.clientX,
-          y: event.clientY
-        };
-      });
-
-      // 鼠标释放
-      window.addEventListener('mouseup', () => {
-        isDragging = false;
-      });
-
-      // 鼠标滚轮（缩放）
-      modelContainer.addEventListener('wheel', (event) => {
-        event.preventDefault();
-        if (!currentModel) return;
+        camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000000);
         
-        modelScale += event.deltaY * -0.001;
-        modelScale = Math.min(Math.max(0.1, modelScale), 10); // 限制缩放范围
-        currentModel.scale.set(modelScale, modelScale, modelScale);
-      });
-
-      // 键盘控制（移动）
-      window.addEventListener('keydown', (event) => {
-        if (!currentModel) return;
+        // 渲染器升级：加入对数深度缓冲区，并开启色彩映射（防止模型发白或死黑）
+        renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
+        renderer.outputEncoding = THREE.sRGBEncoding; 
+        document.getElementById('model-container').appendChild(renderer.domElement);
         
-        const speed = 0.1;
-        switch (event.key) {
-          case 'ArrowUp':
-            modelPosition.y += speed;
-            break;
-          case 'ArrowDown':
-            modelPosition.y -= speed;
-            break;
-          case 'ArrowLeft':
-            modelPosition.x -= speed;
-            break;
-          case 'ArrowRight':
-            modelPosition.x += speed;
-            break;
-        }
-        currentModel.position.set(modelPosition.x, modelPosition.y, 0);
-      });
+        // 全方位打光机制：环境光提供基础亮度，平行光拉出石雕纹理阴影
+        scene.add(new THREE.AmbientLight(0xffffff, 1.0));
+        const light1 = new THREE.DirectionalLight(0xffffff, 0.6);
+        light1.position.set(10, 20, 15);
+        scene.add(light1);
+        const light2 = new THREE.DirectionalLight(0xffffff, 0.3);
+        light2.position.set(-10, 10, -10);
+        scene.add(light2);
+
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        animate();
     }
 
-    // 加载3D模型
-    function loadModel(modelPath) {
-      // 移除当前模型
-      if (currentModel) {
-        scene.remove(currentModel);
-      }
+    // 2. 用简洁、强大的 GLTFLoader 替换原本繁琐的加载逻辑
+    function load3D(path) {
+        if (currentModel) scene.remove(currentModel);
+        const overlay = document.getElementById('loading-overlay');
+        overlay.style.display = 'flex';
+        document.getElementById('progress').innerText = '0%';
 
-      // 重置模型状态
-      modelRotation = { x: 0, y: 0 };
-      modelPosition = { x: 0, y: 0 };
-      modelScale = 1;
+        const loader = new THREE.GLTFLoader();
+        loader.load(path, (gltf) => {
+            const obj = gltf.scene;
+            
+            // 核心微调：重新计算法线断开拉丝，并强制开启双面材质渲染
+            obj.traverse(child => {
+                if (child.isMesh) {
+                    child.geometry.computeVertexNormals();
+                    if (child.material) {
+                        child.material.side = THREE.DoubleSide; 
+                    }
+                }
+            });
 
-      const loader = new THREE.OBJLoader();
-      loader.load(
-        modelPath,
-        function (object) {
-          currentModel = object;
-          
-          // 居中模型
-          centerModel(currentModel);
-          
-          // 添加到场景
-          scene.add(currentModel);
-        },
-        function (xhr) {
-          // 加载进度
-          console.log((xhr.loaded / xhr.total * 100) + '% 已加载');
-        },
-        function (error) {
-          console.error('模型加载错误:', error);
-          alert('模型加载失败，请检查文件路径是否正确');
-        }
-      );
-    }
-
-    // 居中模型
-    function centerModel(model) {
-      // 计算模型边界盒
-      const box = new THREE.Box3().setFromObject(model);
-      const center = box.getCenter(new THREE.Vector3());
-      
-      // 移动模型使其中心位于原点
-      model.position.sub(center);
-    }
-
-    // 动画循环
-    function animate() {
-      requestAnimationFrame(animate);
-      renderer.render(scene, camera);
-    }
-
-    // 初始化Three.js
-    initThree();
-
-    // 填充文物列表
-    artifacts.forEach(artifact => {
-      const listItem = document.createElement('li');
-      listItem.className = 'artifact-item';
-      listItem.textContent = artifact.name;
-      
-      listItem.addEventListener('click', function () {
-        // 更新选中状态
-        document.querySelectorAll('.artifact-item').forEach(item => {
-          item.classList.remove('active');
+            cleanAndSetup(obj);
+            overlay.style.display = 'none';
+        }, (xhr) => {
+            if (xhr.lengthComputable) {
+                document.getElementById('progress').innerText = Math.round((xhr.loaded / xhr.total) * 100) + '%';
+            } else {
+                document.getElementById('progress').innerText = '传输中...';
+            }
+        }, (error) => {
+            console.error('模型解析失败:', error);
+            document.getElementById('progress').innerText = '加载失败';
         });
-        this.classList.add('active');
+    }
 
-        // 显示文物信息
-        artifactName.textContent = artifact.name;
-        artifactTexture.textContent = artifact.texture;
-        artifactEra.textContent = artifact.era;
-        artifactSize.textContent = artifact.size || '未记录';
-        artifactQuantity.textContent = artifact.quantity;
-        artifactIntroduction.textContent = artifact.introduction;
+    function cleanAndSetup(obj) {
+        currentModel = obj;
+        
+        // 自动计算包围盒与居中，避免扫描模型偏离中心
+        const box = new THREE.Box3().setFromObject(obj);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        obj.position.sub(center);
+        scene.add(obj);
 
-        // 加载新的3D模型
-        loadModel(artifact.modelPath);
-      });
-      
-      artifactList.appendChild(listItem);
+        // 黄金智能视距调节
+        const maxDim = Math.max(size.x, size.y, size.z);
+        camera.near = maxDim / 2000;
+        camera.far = maxDim * 100;
+        camera.updateProjectionMatrix();
+        camera.position.set(maxDim * 0.65, maxDim * 0.5, maxDim * 0.65);
+		
+        controls.target.set(0, 0, 0);
+        controls.update();
+    }
+
+    function initPhotoLogic() {
+        const box = document.getElementById('photo-container');
+        const img = document.getElementById('main-photo');
+        box.onwheel = (e) => {
+            e.preventDefault();
+            imgScale *= (e.deltaY > 0 ? 0.9 : 1.1);
+            img.style.transform = `translate(${imgX}px, ${imgY}px) scale(${imgScale})`;
+        };
+        box.onmousedown = (e) => { isDrag = true; startX = e.clientX - imgX; startY = e.clientY - imgY; };
+        window.onmousemove = (e) => { 
+            if(!isDrag || box.style.display==='none') return;
+            imgX = e.clientX - startX; imgY = e.clientY - startY;
+            img.style.transform = `translate(${imgX}px, ${imgY}px) scale(${imgScale})`;
+        };
+        window.onmouseup = () => isDrag = false;
+    }
+
+    function updateUI(item) {
+        document.getElementById('artifact-name').innerText = item.name;
+        const isP = item.type === 'photo';
+        document.getElementById('content-layout').className = isP ? 'split-mode' : 'standard-mode';
+        document.getElementById('model-container').style.display = isP ? 'none' : 'block';
+        document.getElementById('photo-container').style.display = isP ? 'block' : 'none';
+        
+        document.getElementById('params-box').classList.toggle('hidden', isP);
+        document.getElementById('intro-box').classList.toggle('hidden', isP);
+        document.getElementById('gallery-box').classList.toggle('hidden', !isP);
+        document.getElementById('history-box').classList.toggle('hidden', !isP);
+
+        if (isP) {
+            imgScale = 1; imgX = 0; imgY = 0;
+            const main = document.getElementById('main-photo');
+            main.src = item.images[0];
+            main.style.transform = `translate(0,0) scale(1)`;
+            document.getElementById('p-history').innerText = item.history;
+            const tBox = document.getElementById('thumb-container');
+            tBox.innerHTML = '';
+            item.images.forEach((s, i) => {
+                const t = document.createElement('img');
+                t.src = s; t.className = 'thumb-item' + (i===0?' active':'');
+                t.onclick = () => { main.src = s; document.querySelectorAll('.thumb-item').forEach(x=>x.classList.remove('active')); t.classList.add('active'); };
+                tBox.appendChild(t);
+            });
+        } else {
+            document.getElementById('p-texture').innerText = item.texture;
+            document.getElementById('p-era').innerText = item.era;
+            document.getElementById('p-size').innerText = item.size;
+            document.getElementById('p-quantity').innerText = item.quantity;
+            document.getElementById('p-intro').innerText = item.intro;
+            load3D(item.path);
+        }
+        
+        setTimeout(() => {
+            const v = document.getElementById('main-viewer');
+            if (v) {
+                renderer.setSize(v.offsetWidth, v.offsetHeight);
+                camera.aspect = v.offsetWidth / v.offsetHeight;
+                camera.updateProjectionMatrix();
+            }
+        }, 150);
+    }
+
+    function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); }
+
+    initThree(); initPhotoLogic();
+    
+    // 初始化生成左侧文物树列表
+    artifacts.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'artifact-item';
+        li.innerText = item.name;
+        li.onclick = () => { 
+            document.querySelectorAll('.artifact-item').forEach(x=>x.classList.remove('active')); 
+            li.classList.add('active'); 
+            updateUI(item); 
+        };
+        document.getElementById('artifact-list').appendChild(li);
     });
-  </script>
+</script>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>文物数字展厅</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Noto Serif SC", serif; }
+        body { background-color: #f8f5e6; color: #3a2e21; overflow-x: hidden; }
+        .container { display: flex; min-height: 100vh; }
+        #left-column { width: 250px; background-color: #e8e0d0; padding: 25px 15px; flex-shrink: 0; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 10; }
+        .column-title { color: #8b4513; border-bottom: 2px solid #c19a6b; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }
+        #artifact-list { list-style: none; }
+        .artifact-item { cursor: pointer; padding: 12px 15px; margin-bottom: 8px; background-color: #f5f0e1; border-radius: 6px; transition: all 0.3s; border-left: 4px solid transparent; }
+        .artifact-item.active { background-color: #fff; border-left-color: #8b4513; transform: translateX(5px); }
+        #right-column { flex-grow: 1; padding: 30px; display: flex; flex-direction: column; }
+        #artifact-name { color: #8b4513; margin-bottom: 20px; border-bottom: 3px solid #d2b48c; font-size: 2rem; }
+        #content-layout { display: flex; flex-direction: column; gap: 20px; flex-grow: 1; height: 500px;} 
+		
+		
+		
+		
+		
+        #content-layout.split-mode { flex-direction: row; height: 500px; }
+		
+        #main-viewer { background-color: #111; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); overflow: hidden; position: relative; flex-grow: 1; min-height: 400px; display: flex; align-items: center; justify-content: center; }
+        
+		#model-container { width: 100%; height: 100%; cursor: grab; }
+        #photo-container { width: 100%; height: 100%; display: none; overflow: hidden; position: relative; background: #fff; cursor: grab; }
+        #main-photo { position: absolute; height: 100%; width: auto; transform-origin: center; transition: transform 0.1s; pointer-events: none; }
+        #info-panel { flex-shrink: 0; background-color: #fff; border-radius: 8px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .split-mode #info-panel { width: 380px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+        .thumb-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; overflow-y: auto; max-height: 400px; padding: 5px; }
+        .thumb-item { width: 100%; aspect-ratio: 9/16; object-fit: cover; cursor: pointer; border: 2px solid transparent; }
+        .thumb-item.active { border-color: #8b4513; }
+        .section-title { font-weight: bold; color: #8b4513; margin-bottom: 8px; display: block; border-left: 4px solid #8b4513; padding-left: 10px; }
+        .hidden { display: none !important; }
+        .model-controls { position: absolute; bottom: 15px; right: 15px; background: rgba(255,255,255,0.8); padding: 8px; border-radius: 4px; font-size: 0.75rem; pointer-events: none; z-index: 5; }
+        #loading-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:10; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="left-column">
+            <h2 class="column-title">文物列表</h2>
+            <ul id="artifact-list"></ul>
+        </div>
+        <div id="right-column">
+            <h2 id="artifact-name">请选择文物</h2>
+            <div id="content-layout">
+                <div id="main-viewer">
+                    <div id="loading-overlay">
+                        <p style="color:#8b4513;font-weight:bold;">深度解析高性能三维资产...</p>
+                        <p id="progress">0%</p>
+                    </div>
+                    <div id="model-container"></div>
+                    <div id="photo-container"><img id="main-photo" src=""></div>
+                    <div class="model-controls">3D: 左键旋转 | 右键平移 | 滚轮缩放 —— 图片: 左键拖拽 | 滚轮缩放</div>
+                </div>
+                <div id="info-panel">
+                    <div id="params-box">
+                        <span class="section-title">详细参数</span>
+                        <p>质地：<span id="p-texture"></span> | 年代：<span id="p-era"></span></p>
+                        <p>尺寸：<span id="p-size"></span> | 数量：<span id="p-quantity"></span></p>
+                    </div>
+                    <div id="intro-box" style="margin-top:15px;"><span class="section-title">简介</span><p id="p-intro"></p></div>
+                    <div id="gallery-box" class="hidden"><span class="section-title">图片集</span><div id="thumb-container" class="thumb-grid"></div></div>
+                    <div id="history-box" class="hidden" style="margin-top:15px;"><span class="section-title">文物历史</span><p id="p-history"></p></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+<script>
+    // 1. 数据源精准对齐你的最新 .glb 文件名
+    const artifacts = [
+        { name: '1. 佛首', type: '3d', texture: '砂岩', era: '北魏', size: '高29.5cm', quantity: '1', intro: '砂岩质，高29.5厘米，高肉髻，弯眉，双目微闭，似冥想状。', path: 'models/foshou.glb' },
+        { name: '2. 方块石', type: '3d', texture: '石灰岩', era: '汉代', size: '大型', quantity: '1', intro: '汉代石加工工艺的代表。', path: 'models/fangkuaishi.glb' },
+        { name: '3. 画像石', type: '3d', texture: '石灰岩', era: '汉代', size: ' ', quantity: '2', intro: '在方形青石上绘制汉代人物画像。', path: 'models/huaxiangshi.glb' },
+        { name: '4. 门狮', type: '3d', texture: '石灰岩', era: '东魏', size: '长41.5厘米，宽15厘米，高31厘米', quantity: '1', intro: '这件东魏时期的门墩石狮，即具有实用价值又有其装饰作用。狮子挺胸昂首，巨目大眼，形象非常的威猛。而狮子辟邪护法的寓意得到人们的崇拜。', path: 'models/menshi.glb' },
+        { name: '5. 坐卧石狮', type: '3d', texture: '石灰岩', era: '唐代', size: '高10cm', quantity: '1', intro: '狮子的形象始于汉朝，目传东汉章帝时，西域大月国将狮子作为礼物进贡给中国皇帝。后来随着佛教传入，狮子成为一种赋予神力的灵兽。在佛教场所、陵墓、建筑上都较为常!L。这尊石狮张嘴伸舌，挺昂首，双眼前视，体壮有力颇有唐代时期石狮威猛雄壮的风采。', path: 'models/zuowoshishi.glb' },
+        { name: '6. 长大石刻', type: 'photo', history: '长安大学石刻系列。', 
+            images: [
+                'images/DSC02813.JPG', 'images/DSC02816.JPG', 'images/DSC02819.JPG', 
+                'images/DSC02821.JPG', 'images/DSC02823.JPG', 'images/DSC02825.JPG', 
+                'images/DSC02827.JPG', 'images/DSC02829.JPG', 'images/DSC02836.JPG',
+                'images/DSC02839.JPG', 'images/DSC02841.JPG', 'images/DSC02844.JPG', 
+                'images/DSC02846.JPG', 'images/DSC02848.JPG', 'images/DSC02854.JPG',
+                'images/DSC02858.JPG', 'images/DSC02863.JPG', 'images/DSC02865.JPG'
+            ] 
+        }
+    ];
+
+    let scene, camera, renderer, controls, currentModel;
+    let imgScale = 1, imgX = 0, imgY = 0, isDrag = false, startX, startY;
+
+    function initThree() {
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x111111); // 深色背景更有展厅厚重感
+        
+        camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000000);
+        
+        // 渲染器升级：加入对数深度缓冲区，并开启色彩映射（防止模型发白或死黑）
+        renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
+        renderer.outputEncoding = THREE.sRGBEncoding; 
+        document.getElementById('model-container').appendChild(renderer.domElement);
+        
+        // 全方位打光机制：环境光提供基础亮度，平行光拉出石雕纹理阴影
+        scene.add(new THREE.AmbientLight(0xffffff, 1.0));
+        const light1 = new THREE.DirectionalLight(0xffffff, 0.6);
+        light1.position.set(10, 20, 15);
+        scene.add(light1);
+        const light2 = new THREE.DirectionalLight(0xffffff, 0.3);
+        light2.position.set(-10, 10, -10);
+        scene.add(light2);
+
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        animate();
+    }
+
+    // 2. 用简洁、强大的 GLTFLoader 替换原本繁琐的加载逻辑
+    function load3D(path) {
+        if (currentModel) scene.remove(currentModel);
+        const overlay = document.getElementById('loading-overlay');
+        overlay.style.display = 'flex';
+        document.getElementById('progress').innerText = '0%';
+
+        const loader = new THREE.GLTFLoader();
+        loader.load(path, (gltf) => {
+            const obj = gltf.scene;
+            
+            // 核心微调：重新计算法线断开拉丝，并强制开启双面材质渲染
+            obj.traverse(child => {
+                if (child.isMesh) {
+                    child.geometry.computeVertexNormals();
+                    if (child.material) {
+                        child.material.side = THREE.DoubleSide; 
+                    }
+                }
+            });
+
+            cleanAndSetup(obj);
+            overlay.style.display = 'none';
+        }, (xhr) => {
+            if (xhr.lengthComputable) {
+                document.getElementById('progress').innerText = Math.round((xhr.loaded / xhr.total) * 100) + '%';
+            } else {
+                document.getElementById('progress').innerText = '传输中...';
+            }
+        }, (error) => {
+            console.error('模型解析失败:', error);
+            document.getElementById('progress').innerText = '加载失败';
+        });
+    }
+
+    function cleanAndSetup(obj) {
+        currentModel = obj;
+        
+        // 自动计算包围盒与居中，避免扫描模型偏离中心
+        const box = new THREE.Box3().setFromObject(obj);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        obj.position.sub(center);
+        scene.add(obj);
+
+        // 黄金智能视距调节
+        const maxDim = Math.max(size.x, size.y, size.z);
+        camera.near = maxDim / 2000;
+        camera.far = maxDim * 100;
+        camera.updateProjectionMatrix();
+        camera.position.set(maxDim * 0.65, maxDim * 0.5, maxDim * 0.65);
+		
+        controls.target.set(0, 0, 0);
+        controls.update();
+    }
+
+    function initPhotoLogic() {
+        const box = document.getElementById('photo-container');
+        const img = document.getElementById('main-photo');
+        box.onwheel = (e) => {
+            e.preventDefault();
+            imgScale *= (e.deltaY > 0 ? 0.9 : 1.1);
+            img.style.transform = `translate(${imgX}px, ${imgY}px) scale(${imgScale})`;
+        };
+        box.onmousedown = (e) => { isDrag = true; startX = e.clientX - imgX; startY = e.clientY - imgY; };
+        window.onmousemove = (e) => { 
+            if(!isDrag || box.style.display==='none') return;
+            imgX = e.clientX - startX; imgY = e.clientY - startY;
+            img.style.transform = `translate(${imgX}px, ${imgY}px) scale(${imgScale})`;
+        };
+        window.onmouseup = () => isDrag = false;
+    }
+
+    function updateUI(item) {
+        document.getElementById('artifact-name').innerText = item.name;
+        const isP = item.type === 'photo';
+        document.getElementById('content-layout').className = isP ? 'split-mode' : 'standard-mode';
+        document.getElementById('model-container').style.display = isP ? 'none' : 'block';
+        document.getElementById('photo-container').style.display = isP ? 'block' : 'none';
+        
+        document.getElementById('params-box').classList.toggle('hidden', isP);
+        document.getElementById('intro-box').classList.toggle('hidden', isP);
+        document.getElementById('gallery-box').classList.toggle('hidden', !isP);
+        document.getElementById('history-box').classList.toggle('hidden', !isP);
+
+        if (isP) {
+            imgScale = 1; imgX = 0; imgY = 0;
+            const main = document.getElementById('main-photo');
+            main.src = item.images[0];
+            main.style.transform = `translate(0,0) scale(1)`;
+            document.getElementById('p-history').innerText = item.history;
+            const tBox = document.getElementById('thumb-container');
+            tBox.innerHTML = '';
+            item.images.forEach((s, i) => {
+                const t = document.createElement('img');
+                t.src = s; t.className = 'thumb-item' + (i===0?' active':'');
+                t.onclick = () => { main.src = s; document.querySelectorAll('.thumb-item').forEach(x=>x.classList.remove('active')); t.classList.add('active'); };
+                tBox.appendChild(t);
+            });
+        } else {
+            document.getElementById('p-texture').innerText = item.texture;
+            document.getElementById('p-era').innerText = item.era;
+            document.getElementById('p-size').innerText = item.size;
+            document.getElementById('p-quantity').innerText = item.quantity;
+            document.getElementById('p-intro').innerText = item.intro;
+            load3D(item.path);
+        }
+        
+        setTimeout(() => {
+            const v = document.getElementById('main-viewer');
+            if (v) {
+                renderer.setSize(v.offsetWidth, v.offsetHeight);
+                camera.aspect = v.offsetWidth / v.offsetHeight;
+                camera.updateProjectionMatrix();
+            }
+        }, 150);
+    }
+
+    function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); }
+
+    initThree(); initPhotoLogic();
+    
+    // 初始化生成左侧文物树列表
+    artifacts.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'artifact-item';
+        li.innerText = item.name;
+        li.onclick = () => { 
+            document.querySelectorAll('.artifact-item').forEach(x=>x.classList.remove('active')); 
+            li.classList.add('active'); 
+            updateUI(item); 
+        };
+        document.getElementById('artifact-list').appendChild(li);
+    });
+</script>
+</body>
+>>>>>>> adee581acc335e86d51e38af057ba97c997e0fc4
+=======
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>文物数字展厅</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Noto Serif SC", serif; }
+        body { background-color: #f8f5e6; color: #3a2e21; overflow-x: hidden; }
+        .container { display: flex; min-height: 100vh; }
+        #left-column { width: 250px; background-color: #e8e0d0; padding: 25px 15px; flex-shrink: 0; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 10; }
+        .column-title { color: #8b4513; border-bottom: 2px solid #c19a6b; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }
+        #artifact-list { list-style: none; }
+        .artifact-item { cursor: pointer; padding: 12px 15px; margin-bottom: 8px; background-color: #f5f0e1; border-radius: 6px; transition: all 0.3s; border-left: 4px solid transparent; }
+        .artifact-item.active { background-color: #fff; border-left-color: #8b4513; transform: translateX(5px); }
+        #right-column { flex-grow: 1; padding: 30px; display: flex; flex-direction: column; }
+        #artifact-name { color: #8b4513; margin-bottom: 20px; border-bottom: 3px solid #d2b48c; font-size: 2rem; }
+        #content-layout { display: flex; flex-direction: column; gap: 20px; flex-grow: 1; height: 500px;} 
+		
+		
+		
+		
+		
+        #content-layout.split-mode { flex-direction: row; height: 500px; }
+		
+        #main-viewer { background-color: #111; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); overflow: hidden; position: relative; flex-grow: 1; min-height: 400px; display: flex; align-items: center; justify-content: center; }
+        
+		#model-container { width: 100%; height: 100%; cursor: grab; }
+        #photo-container { width: 100%; height: 100%; display: none; overflow: hidden; position: relative; background: #fff; cursor: grab; }
+        #main-photo { position: absolute; height: 100%; width: auto; transform-origin: center; transition: transform 0.1s; pointer-events: none; }
+        #info-panel { flex-shrink: 0; background-color: #fff; border-radius: 8px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .split-mode #info-panel { width: 380px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+        .thumb-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; overflow-y: auto; max-height: 400px; padding: 5px; }
+        .thumb-item { width: 100%; aspect-ratio: 9/16; object-fit: cover; cursor: pointer; border: 2px solid transparent; }
+        .thumb-item.active { border-color: #8b4513; }
+        .section-title { font-weight: bold; color: #8b4513; margin-bottom: 8px; display: block; border-left: 4px solid #8b4513; padding-left: 10px; }
+        .hidden { display: none !important; }
+        .model-controls { position: absolute; bottom: 15px; right: 15px; background: rgba(255,255,255,0.8); padding: 8px; border-radius: 4px; font-size: 0.75rem; pointer-events: none; z-index: 5; }
+        #loading-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:10; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="left-column">
+            <h2 class="column-title">文物列表</h2>
+            <ul id="artifact-list"></ul>
+        </div>
+        <div id="right-column">
+            <h2 id="artifact-name">请选择文物</h2>
+            <div id="content-layout">
+                <div id="main-viewer">
+                    <div id="loading-overlay">
+                        <p style="color:#8b4513;font-weight:bold;">深度解析高性能三维资产...</p>
+                        <p id="progress">0%</p>
+                    </div>
+                    <div id="model-container"></div>
+                    <div id="photo-container"><img id="main-photo" src=""></div>
+                    <div class="model-controls">3D: 左键旋转 | 右键平移 | 滚轮缩放 —— 图片: 左键拖拽 | 滚轮缩放</div>
+                </div>
+                <div id="info-panel">
+                    <div id="params-box">
+                        <span class="section-title">详细参数</span>
+                        <p>质地：<span id="p-texture"></span> | 年代：<span id="p-era"></span></p>
+                        <p>尺寸：<span id="p-size"></span> | 数量：<span id="p-quantity"></span></p>
+                    </div>
+                    <div id="intro-box" style="margin-top:15px;"><span class="section-title">简介</span><p id="p-intro"></p></div>
+                    <div id="gallery-box" class="hidden"><span class="section-title">图片集</span><div id="thumb-container" class="thumb-grid"></div></div>
+                    <div id="history-box" class="hidden" style="margin-top:15px;"><span class="section-title">文物历史</span><p id="p-history"></p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // 1. 数据源精准对齐你的最新 .glb 文件名
+    const artifacts = [
+        { name: '1. 佛首', type: '3d', texture: '砂岩', era: '北魏', size: '高29.5cm', quantity: '1', intro: '砂岩质，高29.5厘米，高肉髻，弯眉，双目微闭，似冥想状。', path: 'models/foshou.glb' },
+        { name: '2. 方块石', type: '3d', texture: '石灰岩', era: '汉代', size: '大型', quantity: '1', intro: '汉代石加工工艺的代表。', path: 'models/fangkuaishi.glb' },
+        { name: '3. 画像石', type: '3d', texture: '石灰岩', era: '汉代', size: ' ', quantity: '2', intro: '在方形青石上绘制汉代人物画像。', path: 'models/huaxiangshi.glb' },
+        { name: '4. 门狮', type: '3d', texture: '石灰岩', era: '东魏', size: '长41.5厘米，宽15厘米，高31厘米', quantity: '1', intro: '这件东魏时期的门墩石狮，即具有实用价值又有其装饰作用。狮子挺胸昂首，巨目大眼，形象非常的威猛。而狮子辟邪护法的寓意得到人们的崇拜。', path: 'models/menshi.glb' },
+        { name: '5. 坐卧石狮', type: '3d', texture: '石灰岩', era: '唐代', size: '高10cm', quantity: '1', intro: '狮子的形象始于汉朝，目传东汉章帝时，西域大月国将狮子作为礼物进贡给中国皇帝。后来随着佛教传入，狮子成为一种赋予神力的灵兽。在佛教场所、陵墓、建筑上都较为常!L。这尊石狮张嘴伸舌，挺昂首，双眼前视，体壮有力颇有唐代时期石狮威猛雄壮的风采。', path: 'models/zuowoshishi.glb' },
+        { name: '6. 长大石刻', type: 'photo', history: '长安大学石刻系列。', 
+            images: [
+                'images/DSC02813.JPG', 'images/DSC02816.JPG', 'images/DSC02819.JPG', 
+                'images/DSC02821.JPG', 'images/DSC02823.JPG', 'images/DSC02825.JPG', 
+                'images/DSC02827.JPG', 'images/DSC02829.JPG', 'images/DSC02836.JPG',
+                'images/DSC02839.JPG', 'images/DSC02841.JPG', 'images/DSC02844.JPG', 
+                'images/DSC02846.JPG', 'images/DSC02848.JPG', 'images/DSC02854.JPG',
+                'images/DSC02858.JPG', 'images/DSC02863.JPG', 'images/DSC02865.JPG'
+            ] 
+        }
+    ];
+
+    let scene, camera, renderer, controls, currentModel;
+    let imgScale = 1, imgX = 0, imgY = 0, isDrag = false, startX, startY;
+
+    function initThree() {
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x111111); // 深色背景更有展厅厚重感
+        
+        camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000000);
+        
+        // 渲染器升级：加入对数深度缓冲区，并开启色彩映射（防止模型发白或死黑）
+        renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
+        renderer.outputEncoding = THREE.sRGBEncoding; 
+        document.getElementById('model-container').appendChild(renderer.domElement);
+        
+        // 全方位打光机制：环境光提供基础亮度，平行光拉出石雕纹理阴影
+        scene.add(new THREE.AmbientLight(0xffffff, 1.0));
+        const light1 = new THREE.DirectionalLight(0xffffff, 0.6);
+        light1.position.set(10, 20, 15);
+        scene.add(light1);
+        const light2 = new THREE.DirectionalLight(0xffffff, 0.3);
+        light2.position.set(-10, 10, -10);
+        scene.add(light2);
+
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        animate();
+    }
+
+    // 2. 用简洁、强大的 GLTFLoader 替换原本繁琐的加载逻辑
+    function load3D(path) {
+        if (currentModel) scene.remove(currentModel);
+        const overlay = document.getElementById('loading-overlay');
+        overlay.style.display = 'flex';
+        document.getElementById('progress').innerText = '0%';
+
+        const loader = new THREE.GLTFLoader();
+        loader.load(path, (gltf) => {
+            const obj = gltf.scene;
+            
+            // 核心微调：重新计算法线断开拉丝，并强制开启双面材质渲染
+            obj.traverse(child => {
+                if (child.isMesh) {
+                    child.geometry.computeVertexNormals();
+                    if (child.material) {
+                        child.material.side = THREE.DoubleSide; 
+                    }
+                }
+            });
+
+            cleanAndSetup(obj);
+            overlay.style.display = 'none';
+        }, (xhr) => {
+            if (xhr.lengthComputable) {
+                document.getElementById('progress').innerText = Math.round((xhr.loaded / xhr.total) * 100) + '%';
+            } else {
+                document.getElementById('progress').innerText = '传输中...';
+            }
+        }, (error) => {
+            console.error('模型解析失败:', error);
+            document.getElementById('progress').innerText = '加载失败';
+        });
+    }
+
+    function cleanAndSetup(obj) {
+        currentModel = obj;
+        
+        // 自动计算包围盒与居中，避免扫描模型偏离中心
+        const box = new THREE.Box3().setFromObject(obj);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        obj.position.sub(center);
+        scene.add(obj);
+
+        // 黄金智能视距调节
+        const maxDim = Math.max(size.x, size.y, size.z);
+        camera.near = maxDim / 2000;
+        camera.far = maxDim * 100;
+        camera.updateProjectionMatrix();
+        camera.position.set(maxDim * 0.65, maxDim * 0.5, maxDim * 0.65);
+		
+        controls.target.set(0, 0, 0);
+        controls.update();
+    }
+
+    function initPhotoLogic() {
+        const box = document.getElementById('photo-container');
+        const img = document.getElementById('main-photo');
+        box.onwheel = (e) => {
+            e.preventDefault();
+            imgScale *= (e.deltaY > 0 ? 0.9 : 1.1);
+            img.style.transform = `translate(${imgX}px, ${imgY}px) scale(${imgScale})`;
+        };
+        box.onmousedown = (e) => { isDrag = true; startX = e.clientX - imgX; startY = e.clientY - imgY; };
+        window.onmousemove = (e) => { 
+            if(!isDrag || box.style.display==='none') return;
+            imgX = e.clientX - startX; imgY = e.clientY - startY;
+            img.style.transform = `translate(${imgX}px, ${imgY}px) scale(${imgScale})`;
+        };
+        window.onmouseup = () => isDrag = false;
+    }
+
+    function updateUI(item) {
+        document.getElementById('artifact-name').innerText = item.name;
+        const isP = item.type === 'photo';
+        document.getElementById('content-layout').className = isP ? 'split-mode' : 'standard-mode';
+        document.getElementById('model-container').style.display = isP ? 'none' : 'block';
+        document.getElementById('photo-container').style.display = isP ? 'block' : 'none';
+        
+        document.getElementById('params-box').classList.toggle('hidden', isP);
+        document.getElementById('intro-box').classList.toggle('hidden', isP);
+        document.getElementById('gallery-box').classList.toggle('hidden', !isP);
+        document.getElementById('history-box').classList.toggle('hidden', !isP);
+
+        if (isP) {
+            imgScale = 1; imgX = 0; imgY = 0;
+            const main = document.getElementById('main-photo');
+            main.src = item.images[0];
+            main.style.transform = `translate(0,0) scale(1)`;
+            document.getElementById('p-history').innerText = item.history;
+            const tBox = document.getElementById('thumb-container');
+            tBox.innerHTML = '';
+            item.images.forEach((s, i) => {
+                const t = document.createElement('img');
+                t.src = s; t.className = 'thumb-item' + (i===0?' active':'');
+                t.onclick = () => { main.src = s; document.querySelectorAll('.thumb-item').forEach(x=>x.classList.remove('active')); t.classList.add('active'); };
+                tBox.appendChild(t);
+            });
+        } else {
+            document.getElementById('p-texture').innerText = item.texture;
+            document.getElementById('p-era').innerText = item.era;
+            document.getElementById('p-size').innerText = item.size;
+            document.getElementById('p-quantity').innerText = item.quantity;
+            document.getElementById('p-intro').innerText = item.intro;
+            load3D(item.path);
+        }
+        
+        setTimeout(() => {
+            const v = document.getElementById('main-viewer');
+            if (v) {
+                renderer.setSize(v.offsetWidth, v.offsetHeight);
+                camera.aspect = v.offsetWidth / v.offsetHeight;
+                camera.updateProjectionMatrix();
+            }
+        }, 150);
+    }
+
+    function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); }
+
+    initThree(); initPhotoLogic();
+    
+    // 初始化生成左侧文物树列表
+    artifacts.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'artifact-item';
+        li.innerText = item.name;
+        li.onclick = () => { 
+            document.querySelectorAll('.artifact-item').forEach(x=>x.classList.remove('active')); 
+            li.classList.add('active'); 
+            updateUI(item); 
+        };
+        document.getElementById('artifact-list').appendChild(li);
+    });
+</script>
+</body>
+>>>>>>> adee581acc335e86d51e38af057ba97c997e0fc4
 </html>
